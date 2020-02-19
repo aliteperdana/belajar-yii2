@@ -9,6 +9,7 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\Employee;
 
 class SiteController extends Controller
 {
@@ -155,5 +156,126 @@ class SiteController extends Controller
       return $this->render('komentar',[
         'model'=>$model,
       ]);
+    }
+
+    public function actionQuery()
+    {
+      $db=Yii::$app->db;
+      $command= $db->createCommand('SELECT * FROM employee');
+      $employees=$command->queryAll();
+      // Ektrak Data
+      foreach ($employees as $employee) {
+        echo "<br>";
+        echo $employee['id'];
+        echo $employee['name'];
+        echo $employee['age'];
+      }
+    }
+
+    public function actionQuery2()
+    {
+      $db=Yii::$app->db;
+      // return single row
+      $employee= $db->createCommand('SELECT * FROM employee WHERE id=1')->queryOne();
+      echo $employee['id'].". ";
+      echo $employee['name'].". ";
+      echo "(".$employee['age'].")";
+      // return single column (the first column)
+      $name=$db->createCommand('SELECT name FROM employee')->queryColumn();
+      echo "<hr>";
+      print_r($name);
+      // return Scalar
+      $count=$db->createCommand('SELECT COUNT(*) FROM employee')->queryScalar();
+      echo "<hr>";
+      echo "jumlah karyawan ".$count;
+    }
+
+    public function actionQueryBinding()
+    {
+      $db=Yii::$app->db;
+      $command= $db->createCommand('SELECT * FROM employee WHERE id=:id',['id'=>2]);
+      $employee=$command->queryOne();
+      // Ektrak Data
+        echo "<br>";
+        echo $employee['id'];
+        echo $employee['name'];
+        echo $employee['age'];
+    }
+
+    public function actionInsert()
+    {
+      $db=Yii::$app->db;
+      $insertEmployee=$db->createCommand()->insert('employee',['name'=>'Alit','age'=>26])->execute();
+      echo $insertEmployee." Row affected";
+    }
+
+    public function actionUpdate()
+    {
+      $db=Yii::$app->db;
+      $insertEmployee=$db->createCommand()->update('employee',['age'=>1],'name="Alit"')->execute();
+      echo $insertEmployee." Row affected";
+    }
+
+    public function actionActiveRecord()
+    {
+      // $employees=\app\models\Employee::find()->all();
+      // foreach ($employees as $employee ) {
+      //   echo "<br>";
+      //   echo $employee->id."-";
+      //   echo $employee->name."-";
+      //   echo $employee->age;
+      // }
+
+      // $employees=Employee::find()->where(
+      //     ['id'=> 2]
+      //   )->one();
+      // echo "<br>";
+      // echo $employees->id."-";
+      // echo $employees->name."-";
+      // echo $employees->age;
+
+      // $employees=Employee::find()->where(
+      //     ['>','age','10']
+      //   )->orderBy('id DESC')->all();
+      // // print_r($employees);
+      // foreach ($employees as $employee) {
+      //   echo "<br>";
+      //   echo $employee->id."-";
+      //   echo $employee->name."-";
+      //   echo $employee->age;
+      // }
+
+      // $employees=Employee::find()->count();
+      // echo $employees;
+
+      // $employees=Employee::findOne(['name'=>'alit']);
+      // echo $employees->id."-";
+      // echo $employees->name."-";
+      // echo $employees->age;
+
+      // $employees=Employee::findAll(['name'=>['Alit','dewi']]);
+      // // print_r($employees);
+      // foreach ($employees as $employee ) {
+      //   echo "<br>";
+      //   echo $employee->id."-";
+      //   echo $employee->name."-";
+      //   echo $employee->age;
+      // }
+
+      // $employee= new Employee();
+      // $employee->name='James Bond4';
+      // $employee->age=200;
+      // $employee->gender="male";
+      // $employee->save();
+
+      // $employee=Employee::findOne(['name'=>'Alit']);
+      // $employee->age=26;
+      // $employee->save();
+
+      // $employee=Employee::findOne(['name'=>'alit','age'=>1]);
+      // $employee->delete();
+
+
+
     }
 }
