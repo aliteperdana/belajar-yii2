@@ -9,9 +9,11 @@ class Employee extends ActiveRecord
   {
     return
     [
-      // ['selected','boolean'],
-      ['gender','boolean', 'trueValue'=>'male', 'falseValue' => 'female', 'strict'=>true]
-      // ,['tureValue'=>'male','falseValue'=>'female','strict'=>true]
+      [['name','age','gender'],'required'],
+      [['name'],'string'],
+      [['age'],'integer'],
+      ['gender','boolean', 'trueValue'=>'male',
+       'falseValue' => 'female', 'strict'=>true]
     ];
 
   }

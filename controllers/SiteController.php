@@ -10,6 +10,8 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\Employee;
+use app\models\Customer;
+use app\models\Order;
 
 class SiteController extends Controller
 {
@@ -275,7 +277,39 @@ class SiteController extends Controller
       // $employee=Employee::findOne(['name'=>'alit','age'=>1]);
       // $employee->delete();
 
+    }
 
+    public function actionRelasi()
+    {
+      $customer=Customer::findOne(1);
+      // print_r($customer);
+      // echo $customer->name;
+
+      $orders=$customer->orders;
+      // print_r($orders);
+      // echo $orders->price."<br>";
+      // echo $orders->name;
+      foreach ($orders as $key) {
+        echo $customer->name.'<br>';
+        echo  $key->name;
+      }
+    }
+
+    public function actionTransaksiData()
+    {
+      $transaksi=Employee::getDb()->beginTransaction();
+      try {
+        $employee=new Employee();
+        $employee->name='Gamora';
+        $employee->age=37;
+        $employee->gender='female';
+        $employee->save();
+
+        $transaksi->commit();
+      } catch (\Exception $e) {
+        $transaksi->rollBack();
+        throw $e;
+      }
 
     }
 }
