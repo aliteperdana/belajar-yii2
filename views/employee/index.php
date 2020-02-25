@@ -4,7 +4,9 @@ use \yii\widgets\LinkPager;
 ?>
 <h1>DAFTAR PEGAWAI</h1>
 <?php
-  if ($_GET['page']==1) {
+  if (empty($_GET)) {
+    $no=1;
+  }elseif ($_GET['page']==1 ) {
     $no=1;
   }elseif ($no=$_GET['page']>1) {
     $no=$_GET['page']*10;
