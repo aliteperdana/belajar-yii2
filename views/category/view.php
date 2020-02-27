@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\models\User;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Category */
@@ -10,6 +11,15 @@ $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Categories', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+
+$username_created_by=$model->created_by;
+if ($user=User::findIdentity($model->created_by)) {
+  $username_created_by=$user->username;
+}
+$username_updated_by=$model->updated_by;
+if ($user=User::findIdentity($model->updated_by)) {
+  $username_updated_by=$user->username;
+}
 ?>
 <div class="category-view">
 
@@ -34,8 +44,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'description',
             'created_at',
             'updated_at',
-            'created_by',
-            'updated_by',
+            [
+            'attribute'=>'created_by',
+            'value'=>$username_created_by
+            ],
+            [
+              'attribute'=>'updated_by',
+              'value'=>$username_updated_by
+            ],
+
+
         ],
     ]) ?>
 

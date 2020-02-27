@@ -68,8 +68,12 @@ class CategoryController extends Controller
     public function actionCreate()
     {
         $model = new Category();
+        $timestamp= new TimestampBehavior;
+        // $model['test_data']= $timestamp->createdAtAttribute;
+
         // $model->created_at = time();
         // $model->updated_at = time();
+
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -89,15 +93,20 @@ class CategoryController extends Controller
      */
     public function actionUpdate($id)
     {
+        // $model = new Category();
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())&&$model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
+
+
+        }else{
+          return $this->render('update', [
+              'model' => $model,
+          ]);
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+
     }
 
     /**

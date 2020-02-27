@@ -35,7 +35,7 @@ class Category extends ActiveRecord
     {
         return [
             [['title'], 'required'],
-            [['created_at', 'updated_at', 'created_by', 'updated_by'], 'integer'],
+            [['created_by', 'updated_by'], 'integer'],
             [['title', 'description'], 'string', 'max' => 255],
         ];
     }
@@ -75,26 +75,29 @@ class Category extends ActiveRecord
     //   return[
     //     [
     //     'class'=>TimestampBehavior::className(),
-    //     'createdAtAttribute'=>'create_time',
-    //     'updatedAtAttribute'=>'update_time',
-    //     // 'value'=>new Expression('NOW()'),
+    //     'createdAtAttribute'=>'created_at',
+    //     'updatedAtAttribute'=>'updated_at',
+    //     'value'=>new Expression('NOW()'),
+    //     ],
     //     // BlameableBehavior::className(),
-    //     // 'createdByAttribute'=>'author_id',
-    //     // 'updatedByAttribute'=>'update_id',
-    //   ],
+    //     // [
+    //     //   'class'=>BlameableBehavior::className(),
+    //     //   'createdByAttribute'=>'created_by',
+    //     //   'updatedByAttribute'=>'updated_by',
+    //     // ],
     //   ];
     // }
 
     public function behaviors(){
     return [
-      TimestampBehavior::className()
         [
         'class' => TimestampBehavior::className(),
-        'createdAtAttribute' => 'create_time',
-        'updatedAtAttribute' => 'update_time',
+        'createdAtAttribute' => 'created_at',
+        'updatedAtAttribute' => 'updated_at',
         'value' => new Expression('NOW()'),
         ],
-    ];
+          BlameableBehavior::className()
+      ];
     }
 
     // public function behaviors(){
@@ -103,7 +106,7 @@ class Category extends ActiveRecord
     //         BlameableBehavior::className()
     //       ];
     // }
-
+    // //
     // public function behaviors()
     // {
     //     return [
@@ -116,6 +119,7 @@ class Category extends ActiveRecord
     //             // if you're using datetime instead of UNIX timestamp:
     //             'value' => new Expression('NOW()'),
     //         ],
+    //
     //     ];
     // }
 }
