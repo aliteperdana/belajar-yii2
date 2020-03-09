@@ -11,8 +11,7 @@ class Komentar extends \yii\base\Model
     public function rules()
     {
         return [
-          [['nama'],'required'],
-          [['pesana'],'safe']
+          [['nama','pesan'],'required'],          
         ];
     }
 

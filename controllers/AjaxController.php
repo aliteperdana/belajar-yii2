@@ -1,7 +1,10 @@
 <?php
 namespace app\controllers;
 use yii\web\Controller;
-// use yii\base\DynamicModel;
+use Yii;
+use yii\base\DynamicModel;
+use app\models\Book;
+use app\models\Komentar;
 
 class AjaxController extends Controller
 {
@@ -17,7 +20,7 @@ class AjaxController extends Controller
 
     public function actionBook()
     {
-      $model= new \yii\base\DynamicModel([
+      $model= new DynamicModel([
         'title','author','year'
       ]);
 
@@ -45,4 +48,82 @@ class AjaxController extends Controller
       return ['book'=>$bookSelected];
     } 
 
+    public function getProvince()
+    {
+      $db= Yii::$app->db;
+      $command=$db->createCommand('SELECT * FROM province ORDER BY name ASC');
+      $province= $command->queryAll();
+
+      return $province;
+    }
+
+    public function actionDepdrop()
+    {
+      $model= new DynamicModel([
+        'province_id','city_id',
+      ]);
+
+      $model->addRule(['province_id'],'integer');
+      $model->addRule(['city_id'],'integer');
+
+      return $this->render('depdrop',[
+          'model'=>$model,
+          'provinces'=>$this->getProvince(),
+      ]);
+
+    }
+
+
+    public function actionGetCities($province_id)
+    {
+      $db= Yii::$app->db;
+      $command=$db->createCommand('SELECT * FROM city 
+        WHERE province_id ='.$province_id);
+      $cities=$command->queryAll();
+
+      \Yii::$app->response->format= \yii\web\Response::FORMAT_JSON;
+      return [
+        'cities'=>$cities,
+      ];
+    }
+
+
+    public function actionAjaxForm()
+    {
+      return $this->render('ajaxform');
+    }
+
+    public function actionKomentar()
+    {
+      $model = new Komentar();
+      return $this->render('komentar',['model'=>$model]);
+    }
+
+    public function actionAjaxComment()
+    {
+      $model = new Komentar();
+      if (Yii::$app->request->isAjax) {
+          Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+          if ($model->load(Yii::$app->request->post()) && $model->save()) {
+              return [
+                  'data' => [
+                      'success' => true,
+                      'model' => $model,
+                      'message' => 'Model has been saved.',
+                  ],
+                  'code' => 0,
+              ];
+          } else {
+              return [
+                  'data' => [
+                      'success' => false,
+                      'model' => null,
+                      'message' => 'An error occured.',
+                  ],
+                  'code' => 1, // Some semantic codes that you know them for yourself
+              ];
+          }
+      }
+    }
 }
