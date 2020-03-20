@@ -96,7 +96,22 @@ class AjaxController extends Controller
     public function actionKomentar()
     {
       $model = new Komentar();
-      return $this->render('komentar',['model'=>$model]);
+
+      if (Yii::$app->request->post() && $model->save() ) {
+          return [
+            'data' => [
+              'success' => true,
+              'model' => $model,
+              'message' => 'Model has been saved.',
+            ],
+            'code' => 0,
+          ];
+            
+      }else{
+        // var_dump(Yii::$app->request->post());
+        return $this->render('komentar',['model'=>$model]);
+      }
+
     }
 
     public function actionAjaxComment()
